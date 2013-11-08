@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Document : applicationContext.xml.xml Created on : 08 December 2010, 
+    15:44 Author : john Description: Purpose of the document follows. -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:amq="http://activemq.apache.org/schema/core"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core-5.5.0.xsd">
+
+    <bean id="dataSource" name="dataSource"
+        class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+        <property name="targetDataSource">
+            <bean class="com.mchange.v2.c3p0.ComboPooledDataSource">
+                <property name="driverClass" value="com.mysql.jdbc.Driver" />
+                <property name="jdbcUrl"
+                    value="jdbc:mysql://172.28.11.45:3306/chat" />
+                <property name="user" value="chat" />
+                <property name="password" value="chat" />
+                <property name="maxPoolSize" value="50" />
+                <property name="numHelperThreads" value="50" />
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="jpaProperties"
+        class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.jdbc.batch_size">20</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.cache.use_second_level_cache">false</prop>
+                <prop key="hibernate.cache.use_query_cache">false</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+            </props>
+        </property>
+    </bean>
+
+</beans>

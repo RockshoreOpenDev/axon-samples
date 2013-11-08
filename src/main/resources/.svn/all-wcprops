@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/REPPDemo/!svn/ver/57/trunk/axon-chat-web/src/main/resources
+END
+log4j.xml
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/REPPDemo/!svn/ver/42/trunk/axon-chat-web/src/main/resources/log4j.xml
+END
+tcp_gossip.xml
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/REPPDemo/!svn/ver/56/trunk/axon-chat-web/src/main/resources/tcp_gossip.xml
+END
+axonChatContext.xml
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/REPPDemo/!svn/ver/57/trunk/axon-chat-web/src/main/resources/axonChatContext.xml
+END
+mysql-datasource-context.xml
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/REPPDemo/!svn/ver/52/trunk/axon-chat-web/src/main/resources/mysql-datasource-context.xml
+END

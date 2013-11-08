@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:core="http://www.axonframework.org/schema/core"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+	<import resource="mysql-datasource-context.xml" />
+
+	<context:component-scan base-package="net.rockshore.axon.chat"></context:component-scan>
+	<core:annotation-config command-bus="commandBus"
+		event-bus="eventBus" />
+
+	<core:jpa-event-store id="eventStore" data-source="dataSource" event-serializer="serialiser"></core:jpa-event-store>
+
+	<core:aggregate-command-handler
+		command-bus="commandBus" aggregate-type="net.rockshore.axon.chat.ChatRoom"
+		repository="chatRoomRepository" />
+	<core:event-bus id="eventBus" />
+	
+	<bean id="serialiser" class="org.axonframework.serializer.xml.XStreamSerializer"/>
+
+	<bean id="jGroups"
+		class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
+		<property name="clusterName" value="chatCluster"></property>
+		<property name="configuration" value="tcp_gossip.xml"></property>
+		<property name="localSegment" ref="localCommandBus"></property>
+		<property name="serializer" ref="serialiser"></property>
+		<property name="phase" value="1000000"></property>
+		<property name="loadFactor" value="0"></property>
+	</bean>
+	
+	<bean id="commandBus"
+		class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
+		<constructor-arg ref="jGroups">
+		</constructor-arg>
+	</bean>
+
+	<core:disruptor-command-bus id="localCommandBus"
+		event-store="eventStore" event-bus="eventBus" transaction-manager="transactionManager">
+		<core:repositories>
+			<core:repository id="chatRoomRepository"
+				aggregate-type="net.rockshore.axon.chat.ChatRoom" />
+		</core:repositories>
+	</core:disruptor-command-bus>
+
+	<bean id="myEmf"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan">
+			<list>
+				<value>net.rockshore</value>
+				<value>org.axonframework.eventstore.jpa</value>
+			</list>
+		</property>
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+		</property>
+		<property name="jpaProperties" ref="jpaProperties" />
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="myEmf" />
+	</bean>
+
+
+</beans>

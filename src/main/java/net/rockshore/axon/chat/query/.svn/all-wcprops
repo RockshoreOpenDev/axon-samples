@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/REPPDemo/!svn/ver/54/trunk/axon-chat-web/src/main/java/net/rockshore/axon/chat/query
+END
+ChatRoomDao.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/REPPDemo/!svn/ver/50/trunk/axon-chat-web/src/main/java/net/rockshore/axon/chat/query/ChatRoomDao.java
+END
+ChatRoomView.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/REPPDemo/!svn/ver/54/trunk/axon-chat-web/src/main/java/net/rockshore/axon/chat/query/ChatRoomView.java
+END
+ChatRoomEventHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/REPPDemo/!svn/ver/54/trunk/axon-chat-web/src/main/java/net/rockshore/axon/chat/query/ChatRoomEventHandler.java
+END
