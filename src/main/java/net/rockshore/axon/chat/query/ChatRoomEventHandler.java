@@ -13,6 +13,7 @@ public class ChatRoomEventHandler {
 	
 	@EventHandler
 	public void handle(ChatRoomCreatedEvent event) {
+		System.out.println("ChatRoomEventHandler.handle()");
 		ChatRoomView view = new ChatRoomView();
 		view.setChatRoomName(event.getId());
 		dao.add(view);

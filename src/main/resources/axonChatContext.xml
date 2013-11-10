@@ -2,24 +2,35 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:core="http://www.axonframework.org/schema/core"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:axon-amqp="http://www.axonframework.org/schema/amqp"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
 	xsi:schemaLocation="http://www.axonframework.org/schema/core http://www.axonframework.org/schema/axon-core.xsd
+		http://www.axonframework.org/schema/amqp http://www.axonframework.org/schema/axon-amqp.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 
 	<import resource="mysql-datasource-context.xml" />
 
+	<context:property-placeholder
+		local-override="true" system-properties-mode="OVERRIDE" />
+
 	<context:component-scan base-package="net.rockshore.axon.chat"></context:component-scan>
+
 	<core:annotation-config command-bus="commandBus"
 		event-bus="eventBus" />
 
-	<core:jpa-event-store id="eventStore" data-source="dataSource" event-serializer="serialiser"></core:jpa-event-store>
+	<core:jpa-event-store id="eventStore" data-source="dataSource"
+		event-serializer="serialiser"></core:jpa-event-store>
 
 	<core:aggregate-command-handler
 		command-bus="commandBus" aggregate-type="net.rockshore.axon.chat.ChatRoom"
 		repository="chatRoomRepository" />
-	<core:event-bus id="eventBus" />
-	
-	<bean id="serialiser" class="org.axonframework.serializer.xml.XStreamSerializer"/>
+
+	<!-- <core:event-bus id="eventBus" /> -->
+
+
+	<bean id="serialiser" class="org.axonframework.serializer.xml.XStreamSerializer" />
 
 	<bean id="jGroups"
 		class="org.axonframework.commandhandling.distributed.jgroups.JGroupsConnectorFactoryBean">
@@ -28,9 +39,9 @@
 		<property name="localSegment" ref="localCommandBus"></property>
 		<property name="serializer" ref="serialiser"></property>
 		<property name="phase" value="1000000"></property>
-		<property name="loadFactor" value="0"></property>
+		<property name="loadFactor" value="100"></property>
 	</bean>
-	
+
 	<bean id="commandBus"
 		class="org.axonframework.commandhandling.distributed.DistributedCommandBus">
 		<constructor-arg ref="jGroups">
@@ -64,5 +75,45 @@
 		<property name="entityManagerFactory" ref="myEmf" />
 	</bean>
 
+	<bean id="defaultClusterSelector" class="org.axonframework.eventhandling.DefaultClusterSelector">
+		<constructor-arg ref="myDefaultCluster"></constructor-arg>
+	</bean>
+
+	<bean id="eventBus" class="org.axonframework.eventhandling.ClusteringEventBus">
+		<constructor-arg ref="defaultClusterSelector"></constructor-arg>
+		<constructor-arg ref="terminal"></constructor-arg>
+	</bean>
+
+	<axon-amqp:terminal id="terminal"
+		connection-factory="amqpConnection" serializer="serialiser"
+		exchange-name="AxonEventBusExchange">
+		<axon-amqp:default-configuration
+			transaction-manager="transactionManager" transaction-size="25"
+			prefetch="200" error-handler="loggingErrorHandler" />
+	</axon-amqp:terminal>
+
+	<bean id="loggingErrorHandler"
+		class="org.springframework.scheduling.support.TaskUtils$LoggingErrorHandler"></bean>
+
+	<rabbit:connection-factory id="amqpConnection" host="127.0.0.1" />
+
+<!-- 	<axon-amqp:configuration id="fullConfig" acknowledge="manual"
+		concurrency="1" queue-name="Queue"
+		error-handler="loggingErrorHandler" receive-timeout="10"
+		recovery-interval="1000" shutdown-timeout="10" transaction-manager="transactionManager"
+		exclusive="true" transaction-size="200" prefetch="1000" /> -->
+
+	<core:cluster id="myDefaultCluster" default="true">
+		<core:selectors>
+			<!-- <core:class-name-matches pattern="net.rockshore.axon.chat.query.ChatRoomEventHandler"/> -->
+			<core:package prefix="net.rockshore.axon.chat.query" />
+		</core:selectors>
+		<core:meta-data>
+			<entry key="AMQP.Config">
+				<axon-amqp:configuration transaction-size="25"
+					queue-name="myDefaultCluster" error-handler="loggingErrorHandler" />
+			</entry>
+		</core:meta-data>
+	</core:cluster>
 
 </beans>

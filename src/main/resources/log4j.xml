@@ -11,7 +11,7 @@
 
 
 	<logger name="org.axonframework">
-		<level value="info" />
+		<level value="debug" />
 	</logger>
 	
 	<logger name="net.rockshore">

@@ -15,7 +15,7 @@
             <bean class="com.mchange.v2.c3p0.ComboPooledDataSource">
                 <property name="driverClass" value="com.mysql.jdbc.Driver" />
                 <property name="jdbcUrl"
-                    value="jdbc:mysql://172.28.11.45:3306/chat" />
+                    value="jdbc:mysql://192.168.0.15:3306/chat" />
                 <property name="user" value="chat" />
                 <property name="password" value="chat" />
                 <property name="maxPoolSize" value="50" />
