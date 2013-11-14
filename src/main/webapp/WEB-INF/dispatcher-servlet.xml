@@ -2,8 +2,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<bean name="/welcome.htm" class="net.rockshore.axon.chat.HelloWorldController" />
+<!-- 	<bean name="/welcome.htm" class="net.rockshore.axon.chat.HelloWorldController" />
 
+    first, define your individual @Configuration classes as beans
+    <bean class="net.rockshore.axon.chat.config.WebConfig"/>
+    <bean class="net.rockshore.axon.chat.config.WebSocketConfig"/>
+    
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix">
@@ -12,6 +16,6 @@
 		<property name="suffix">
 			<value>.jsp</value>
 		</property>
-	</bean>
+	</bean> -->
 
 </beans>

@@ -75,14 +75,15 @@
 		<property name="entityManagerFactory" ref="myEmf" />
 	</bean>
 
-	<bean id="defaultClusterSelector" class="org.axonframework.eventhandling.DefaultClusterSelector">
-		<constructor-arg ref="myDefaultCluster"></constructor-arg>
-	</bean>
+	<!-- <bean id="defaultClusterSelector" class="org.axonframework.eventhandling.DefaultClusterSelector"> 
+		<constructor-arg ref="myDefaultCluster"></constructor-arg> </bean> -->
 
-	<bean id="eventBus" class="org.axonframework.eventhandling.ClusteringEventBus">
-		<constructor-arg ref="defaultClusterSelector"></constructor-arg>
-		<constructor-arg ref="terminal"></constructor-arg>
-	</bean>
+	<!-- <bean id="eventBus" class="org.axonframework.eventhandling.ClusteringEventBus"> 
+		<constructor-arg ref="defaultClusterSelector"></constructor-arg> <constructor-arg 
+		ref="terminal"></constructor-arg> </bean> -->
+
+	<!-- <core:event-bus id="eventBus" terminal="terminal" /> -->
+	<core:event-bus id="eventBus"/>
 
 	<axon-amqp:terminal id="terminal"
 		connection-factory="amqpConnection" serializer="serialiser"
@@ -95,17 +96,19 @@
 	<bean id="loggingErrorHandler"
 		class="org.springframework.scheduling.support.TaskUtils$LoggingErrorHandler"></bean>
 
-	<rabbit:connection-factory id="amqpConnection" host="127.0.0.1" />
+	<rabbit:connection-factory id="amqpConnection"
+		host="127.0.0.1" />
 
-<!-- 	<axon-amqp:configuration id="fullConfig" acknowledge="manual"
-		concurrency="1" queue-name="Queue"
-		error-handler="loggingErrorHandler" receive-timeout="10"
-		recovery-interval="1000" shutdown-timeout="10" transaction-manager="transactionManager"
+	<!-- <axon-amqp:configuration id="fullConfig" acknowledge="manual" concurrency="1" 
+		queue-name="Queue" error-handler="loggingErrorHandler" receive-timeout="10" 
+		recovery-interval="1000" shutdown-timeout="10" transaction-manager="transactionManager" 
 		exclusive="true" transaction-size="200" prefetch="1000" /> -->
 
-	<core:cluster id="myDefaultCluster" default="true">
+	
+
+<!--  	<core:cluster id="myDefaultCluster" default="true">
 		<core:selectors>
-			<!-- <core:class-name-matches pattern="net.rockshore.axon.chat.query.ChatRoomEventHandler"/> -->
+			<core:class-name-matches pattern="net.rockshore.axon.chat.query.ChatRoomEventHandler"/>
 			<core:package prefix="net.rockshore.axon.chat.query" />
 		</core:selectors>
 		<core:meta-data>
@@ -114,6 +117,6 @@
 					queue-name="myDefaultCluster" error-handler="loggingErrorHandler" />
 			</entry>
 		</core:meta-data>
-	</core:cluster>
+	</core:cluster> -->
 
 </beans>
