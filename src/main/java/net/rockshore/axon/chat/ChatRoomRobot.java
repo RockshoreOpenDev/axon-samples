@@ -13,11 +13,11 @@ import org.axonframework.commandhandling.callbacks.LoggingCallback;
 import org.jgroups.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.SmartLifecycle;
+import org.springframework.messaging.core.MessageSendingOperations;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ChatRoomRobot implements SmartLifecycle {
-	
 	
 	@Resource(name="commandBus")
 	CommandBus commandBus;
@@ -56,9 +56,9 @@ public class ChatRoomRobot implements SmartLifecycle {
 						.asCommandMessage(new SendMessageCommand(type
 								.name(), robotName, "RANDOM MESSAGE: "
 								+ UUID.randomUUID().toString()));
-						commandBus.dispatch(message,new LoggingCallback(message));
+						commandBus.dispatch(message/*,new LoggingCallback(message)*/);
 					}
-					executor.schedule(this, 1000, TimeUnit.MILLISECONDS);
+					executor.schedule(this, 5000, TimeUnit.MILLISECONDS);
 				}
 
 			}

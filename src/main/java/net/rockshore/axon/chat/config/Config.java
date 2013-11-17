@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Component()
-@ImportResource(value="classpath:axonChatContext.xml")
 public class Config {
 
 }
